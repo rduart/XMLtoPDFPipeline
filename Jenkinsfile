@@ -53,8 +53,6 @@ pipeline {
 				script {
 					def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
 					def version = pom.version.replace("-SNAPSHOT", ".${currentBuild.number}")
-					def user = 'rduart@trinitytg.com'
-					def pass = 'Trinity$007'
 					
 					print pom.version
 					print version
