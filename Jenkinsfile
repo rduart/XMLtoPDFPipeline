@@ -71,11 +71,16 @@ pipeline {
 				
 					def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
 					def version = pom.version.replace("-SNAPSHOT", ".${currentBuild.number}")
-					git url: 'https://github.com/rduart/XMLtoPDF.git', branch: ${version}
 					
+					print pom.version
+					print version
+					
+					git url: 'https://github.com/rduart/XMLtoPDF.git', branch: '${version}'
 					
 					sh "git clean -f && git reset --hard origin/${version}"
+					
 					sh "git checkout ${version}"
+					
 					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dtag=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${developmentVersion} release:prepare -B"
 //					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} release:clean release:prepare release:perform -B"
 				}
