@@ -59,7 +59,7 @@ pipeline {
 					
 //					echo "Here are the numbers; ${major}.${minor}.${build.number}"
 //					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -Dusername=${user} -Dpassword=${pass} -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
-//					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
+					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
 		
 				}
 			}
@@ -77,11 +77,11 @@ pipeline {
 					
 					git url: "'https://github.com/rduart/XMLtoPDF.git', branch: '${version}'"
 					
-					sh "git clean -f && git reset --hard origin/${version}"
+//					sh "git clean -f && git reset --hard origin/${version}"
 					
-					sh "git checkout ${version}"
+					sh "git checkout '${version}'"
 					
-					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dtag=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${developmentVersion} release:prepare -B"
+					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dtag=${version} -DreleaseVersion=${version} -DdevelopmentVersion='1.2' release:prepare -B"
 //					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} release:clean release:prepare release:perform -B"
 				}
 			}
