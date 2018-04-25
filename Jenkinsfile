@@ -75,7 +75,7 @@ pipeline {
 					print pom.version
 					print version
 					
-					git url: "'https://github.com/rduart/XMLtoPDF.git', branch: '${version}'"
+//					git url: "'https://github.com/rduart/XMLtoPDF.git', branch: '${version}'"
 					
 //					sh "git clean -f && git reset --hard origin/${version}"
 					
