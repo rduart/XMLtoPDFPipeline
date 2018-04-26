@@ -22,7 +22,7 @@ pipeline {
 				slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 			}
 		} */
-        stage('Clean') {
+        stage('Clean Build') {
             steps {
                 // Run the maven build
                 script {
@@ -30,15 +30,12 @@ pipeline {
                     // ** NOTE: This 'M3' Maven tool must be configured
                     // **       in the global configuration.
                     echo 'Pulling...' + env.BRANCH_NAME
-              
 					
                     def targetVersion = getDevVersion()
                     print 'target build version...'
                     print targetVersion
-                    sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dintegration-tests.skip=true -Dbuild.number=${targetVersion} clean package -B"
-					
-//					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DpushChanges=false -DlocalCheckout=true -DpreparationGoals=initialize release:prepare release:perform -B"
-
+                    sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dintegration-tests.skip=true -Dbuild.number=${targetVersion} clean package cobertura:cobertura -Dcobertura.report.format=xml -B"
+				
                     def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
                     // get the current development version 
                     developmentArtifactVersion = "${pom.version}-${targetVersion}"
@@ -48,7 +45,7 @@ pipeline {
 
             }
         }
-		stage('Branch') {
+/*		stage('Build Release') {
 			steps {
 				script {
 					def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
@@ -57,15 +54,14 @@ pipeline {
 					print pom.version
 					print version
 					
-//					echo "Here are the numbers; ${major}.${minor}.${build.number}"
-//					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -Dusername=${user} -Dpassword=${pass} -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
-//					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
+					echo "Here are the numbers; ${major}.${minor}.${build.number}"
+					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml  -DbranchName=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${pom.version} -DautoVersionSubmodules=true -DupdateWorkingCopyVersions=true release:branch -B"
 		
 				}
 			}
-		}
+		} */
 		
-		stage('Prepare') {
+		stage('Build Release') {
 			steps {
 				script {
 				
@@ -75,15 +71,8 @@ pipeline {
 					print pom.version
 					print version
 					
-//					git url: "'https://github.com/rduart/XMLtoPDF.git', branch: '${version}'"
-					
-//					sh "git clean -f && git reset --hard origin/${version}"
-					
-//					sh "git checkout '${version}'"
-					
 					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -Dtag=${version} -DreleaseVersion=${version} -DdevelopmentVersion=${version} release:prepare release:perform -B"
 
-//					sh "'${mvnHome}/bin/mvn' -e --file /var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml -DreleaseVersion=${releaseVersion} -DdevelopmentVersion=${developmentVersion} release:clean release:prepare release:perform -B"
 				}
 			}
 		}
