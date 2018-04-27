@@ -425,7 +425,7 @@ def getDevVersion() {
 
 
 def getReleaseVersion() {
-    def pom = readMavenPom file: 'pom.xml'
+    def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
     def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     def versionNumber;
     if (gitCommit == null) {
