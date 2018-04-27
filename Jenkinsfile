@@ -70,10 +70,11 @@ pipeline {
 		stage('Build Release') {
 			steps {
 				script {
-				
+					def targetVersion = getReleaseVersion()
 					def pom = readMavenPom file: '/var/lib/jenkins/workspace/jiraPL/XMLtoPDF/pom.xml'
 					def version = pom.version.replace("-SNAPSHOT", ".${currentBuild.number}")
 					
+					print targetVersion
 					print pom.version
 					print version
 					
